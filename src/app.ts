@@ -6,6 +6,8 @@ const app : Application= express()
 
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use('/api/user', userRoutes)
 
 app.get('/', (req:Request, res:Response)=>{
     res.send({
@@ -13,6 +15,5 @@ app.get('/', (req:Request, res:Response)=>{
     })
 })
 
-app.use('/api/v1/user', userRoutes)
 
 export default app
