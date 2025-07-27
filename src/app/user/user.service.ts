@@ -12,8 +12,6 @@ const createAdminIntoDB = async(data:any)=>{
     }    
 
     const result = await prisma.$transaction(async (transactionClient): Promise<any> => {
-        
-        console.log("Hashed Password:", hashedPassword);
        await transactionClient.user.create({
             data: userData
         })

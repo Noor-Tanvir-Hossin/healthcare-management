@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const getAllAdminsFromDB = async (params:any, options: any) => {
 
     const {searchTerm , ...filterData} = params;
-    const {limit, page} = options
+    const {limit, page,sortOrder,sortBy} = options
     const andConditions: Prisma.AdminWhereInput[] = [];
     if (params.searchTerm) {
         andConditions.push(
