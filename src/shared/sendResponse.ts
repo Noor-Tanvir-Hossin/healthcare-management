@@ -20,3 +20,4 @@ const sendResponse = <T>(res:Response, jsonData:{
         data:data || undefined || null
     });
 }
+export default sendResponse;
