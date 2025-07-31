@@ -1,23 +1,18 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
+import sendResponse from "../../shared/sendResponse";
+import { StatusCodes } from "http-status-codes";
+import catchAsync from "../../helpars/catchAsync";
 
-const createAdmin = async (req: Request, res: Response) => {
-    try {
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
         const result = await userService.createAdminIntoDB(req.body);
-
-    res.status(201).json({
-        success: true,
-        message: result.message,
-        data: result
-    });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.name || "Internal Server Error",
-            error:error
-        })
-    }
-}
+    sendResponse(res,{
+        statusCode:StatusCodes.CREATED,
+        success:true,
+        message: result.message ||"Admin created!",
+        data:result
+    })    
+})
 
 
 
