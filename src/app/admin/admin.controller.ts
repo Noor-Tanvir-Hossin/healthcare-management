@@ -60,7 +60,6 @@ const getAdminById = async(req: Request, res:Response)=>{
 const updateAdmin = async(req: Request, res:Response)=>{
     try {
         const {id}=req.params
-        console.log (id, req.body)
         const result = await adminService.updateAdminIntoDB(id, req.body);
 
 
@@ -79,9 +78,53 @@ const updateAdmin = async(req: Request, res:Response)=>{
     }
 }
     
+const deleteAdmin = async(req: Request, res:Response)=>{
+    try {
+        const {id}=req.params
+        const result = await adminService.deleteAdminFromDB(id);
+
+
+        res.status(200).json({
+            success: true,
+            message: "Admin deleted successfully",
+            data: result
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message:  "Internal Server Error",
+            error:error
+        })
+    }
+}
+
+const softDeleteAdmin = async(req: Request, res:Response)=>{
+    try {
+        const {id}=req.params
+        const result = await adminService.softDeleteFromDB(id);
+
+
+        res.status(200).json({
+            success: true,
+            message: "Admin deleted successfully",
+            data: result
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message:  "Internal Server Error",
+            error:error
+        })
+    }
+}
+    
 
 export const adminController = {
     getAllAdmins,
     getAdminById,
-    updateAdmin
+    updateAdmin,
+    deleteAdmin,
+    softDeleteAdmin
 }
