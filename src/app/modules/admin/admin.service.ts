@@ -1,9 +1,9 @@
 import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
 import { adminSearchFields } from "./admin.constant";
-import { paginationHelpar } from './../../helpars/paginationHelpar';
-import prisma from "../../shared/prisma";
+import { paginationHelpar } from '../../../helpars/paginationHelpar';
+import prisma from "../../../shared/prisma";
 import { IAdminFilterRequest } from "./admin.interface";
-import { IPaginationOptions } from "../interface/pagination";
+import { IPaginationOptions } from "../../interface/pagination";
 
 
 

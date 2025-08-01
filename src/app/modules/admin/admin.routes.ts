@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { adminController } from "./admin.controller";
-import validateRequest from "../middlewares/validateRequest";
+import validateRequest from "../../middlewares/validateRequest";
 import { adminValidationSchema } from "./admin.validation";
 
 
