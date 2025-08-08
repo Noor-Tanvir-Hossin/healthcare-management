@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../../helpars/catchAsync";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-        const result = await userService.createAdminIntoDB(req.body);
+        const result = await userService.createAdminIntoDB(req);
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
         success:true,
