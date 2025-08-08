@@ -4,6 +4,9 @@ import { jwtHelpers } from "../../../helpars/jwtHelper";
 import * as bcrypt from "bcrypt";
 import { UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
+import emailSender from "./emailSender";
+import ApiError from "../../errors/ApiError";
+import { StatusCodes } from "http-status-codes";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -121,13 +124,61 @@ const forgotPassword = async (payload: { email: string }) => {
     config.jwt.reset_password_secret as Secret,
     config.jwt.reset_password_expires_in as string
   );
-  console.log(resetPasswordToken);
-  
+    const  resetPasswordLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
+    await emailSender(userData.email,
+        `
+        <div>
+            <p>Dear User,</p>
+            <p>Your password reset link 
+                <a href=${resetPasswordLink}>
+                    <button>
+                        Reset Password
+                    </button>
+                </a>
+            </p>
+
+        </div>
+        `
+    )
+    console.log(resetPasswordLink);    
 };
+
+const resetPassword = async (token: string, payload: { id: string, password: string }) => {
+    console.log({ token, payload })
+
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: payload.id,
+            status: UserStatus.ACTIVE
+        }
+    });
+
+    const isValidToken = jwtHelpers.verifyToken(token, config.jwt.reset_password_secret as Secret)
+
+    if (!isValidToken) {
+        throw new ApiError(StatusCodes.FORBIDDEN, "Forbidden!")
+    }
+
+    // hash password
+    const password = await bcrypt.hash(payload.password, 12);
+
+    // update into database
+    await prisma.user.update({
+        where: {
+            id: payload.id
+        },
+        data: {
+            password
+        }
+    })
+};
+
+
 
 export const AuthServices = {
   loginUser,
   refreshToken,
   changePassword,
   forgotPassword,
+  resetPassword
 };
