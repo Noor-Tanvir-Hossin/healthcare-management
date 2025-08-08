@@ -1,3 +1,4 @@
+import { Gender } from "@prisma/client";
 import z from "zod";
 
 const createAdmin = z.object({
@@ -8,7 +9,28 @@ const createAdmin = z.object({
       contactNumber: z.string().min(1, "Contact Number is required!")
     })
   });
+
+  
+  const createDoctor = z.object({
+    password: z.string().min(1, "Password is required"),
+    doctor: z.object({
+      name: z.string().min(1, "Name is required!"),
+      email: z.string().min(1, "Email is required!"),
+      contactNumber: z.string().min(1, "Contact Number is required!"),
+      address: z.string().optional(),
+      registrationNumber: z.string().min(1, "Reg number is required"),
+      experience: z.number().optional(),
+      gender: z.enum([Gender.MALE, Gender.FEMALE]),
+      appointmentFee: z
+        .number()
+        .refine((val) => val > 0, { message: "Appointment fee is required" }),
+      qualification: z.string().min(1, "Qualification is required"),
+      currentWorkingPlace: z.string().min(1, "Current working place is required!"),
+      designation: z.string().min(1, "Designation is required!")
+    })
+  });
   
   export const userValidation ={
-    createAdmin
+    createAdmin,
+    createDoctor
   }
