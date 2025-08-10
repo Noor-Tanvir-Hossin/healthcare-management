@@ -4,12 +4,15 @@ import auth from '../../middlewares/auth';
 import { UserRole } from '@prisma/client';
 import { fileUploader } from '../../../helpars/fileUploader';
 import { userValidation } from './user.validation';
+import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
 
 
 router.get('/',auth(UserRole.ADMIN, UserRole.SUPER_ADMIN) , userController.getAllUser)
+
+
 
 router.post('/create-admin', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN) ,
 fileUploader.upload.single('file'),
@@ -31,5 +34,12 @@ fileUploader.upload.single('file'),
     req.body = userValidation.createPatient.parse(JSON.parse(req.body.data))
     return userController.createPatient(req, res,next)
 });
+
+router.patch(
+    '/:id/status',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    validateRequest(userValidation.updateStatus),
+    userController.changeProfileStatus
+);
 
 export const userRoutes = router;
