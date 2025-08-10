@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get('/',auth(UserRole.ADMIN, UserRole.SUPER_ADMIN) , userController.getAllUser)
 
-
+router.get('/me',auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR,UserRole.PATIENT) , userController.getMyProfile)
 
 router.post('/create-admin', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN) ,
 fileUploader.upload.single('file'),
