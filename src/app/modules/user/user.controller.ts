@@ -9,7 +9,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
         success:true,
-        message: result.message ||"Admin created!",
+        message:"Admin created!",
         data:result
     })    
 })
@@ -19,7 +19,17 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
         success:true,
-        message: result.message ||"Doctor Created Successfully!",
+        message:"Doctor Created Successfully!",
+        data:result
+    })    
+})
+
+const createPatient = catchAsync(async (req: Request, res: Response) => {
+        const result = await userService.createPatientIntoDB(req);
+    sendResponse(res,{
+        statusCode:StatusCodes.CREATED,
+        success:true,
+        message:"Patient Created Successfully!",
         data:result
     })    
 })
@@ -31,5 +41,6 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 
 export const userController = {
     createAdmin,
-    createDoctor
+    createDoctor,
+    createPatient
 }

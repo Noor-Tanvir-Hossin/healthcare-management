@@ -30,7 +30,21 @@ const createAdmin = z.object({
     })
   });
   
+
+  const createPatient = z.object({
+    password: z.string().min(1, "Password is required"),
+    patient: z.object({
+      email: z.string().min(1, "Email is required!").email("Invalid email address"),
+      name: z.string().min(1, "Name is required!"),
+      contactNumber: z.string().min(1, "Contact number is required!"),
+      address: z.string().min(1, "Address is required")
+    })
+  });
+
+
+
   export const userValidation ={
     createAdmin,
-    createDoctor
+    createDoctor,
+    createPatient
   }
