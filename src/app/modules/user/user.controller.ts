@@ -3,6 +3,8 @@ import { userService } from "./user.service";
 import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../../helpars/catchAsync";
+import pick from "../../../shared/pick";
+import { userFilterableFields } from "./user.constant";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
         const result = await userService.createAdminIntoDB(req);
@@ -35,6 +37,29 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const getAllUser = catchAsync(async (req: Request, res: Response) => {
+    const filters = pick(req.query, userFilterableFields);
+    const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+    const result = await userService.getAllUserFromDB(filters, options);
+  
+    if (!result.data.length) {
+      sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
+          success: false,
+          message: "user not found",
+          data: null,
+        });
+    }
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "User data fatched!",
+      meta: result.meta,
+      data: result.data,
+    });
+  });
+
+
 
 
 
@@ -42,5 +67,6 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 export const userController = {
     createAdmin,
     createDoctor,
-    createPatient
+    createPatient,
+    getAllUser
 }
