@@ -6,7 +6,7 @@ import catchAsync from "../../../helpars/catchAsync";
 import pick from "../../../shared/pick";
 import { userFilterableFields } from "./user.constant";
 
-const createAdmin = catchAsync(async (req: Request, res: Response) => {
+const createAdmin = catchAsync(async (req, res) => {
         const result = await userService.createAdminIntoDB(req);
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
@@ -16,7 +16,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
     })    
 })
 
-const createDoctor = catchAsync(async (req: Request, res: Response) => {
+const createDoctor = catchAsync(async (req, res) => {
         const result = await userService.createDoctorIntoDB(req);
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
@@ -26,7 +26,7 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
     })    
 })
 
-const createPatient = catchAsync(async (req: Request, res: Response) => {
+const createPatient = catchAsync(async (req, res) => {
         const result = await userService.createPatientIntoDB(req);
     sendResponse(res,{
         statusCode:StatusCodes.CREATED,
@@ -37,7 +37,7 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-const getAllUser = catchAsync(async (req: Request, res: Response) => {
+const getAllUser = catchAsync(async (req, res) => {
     const filters = pick(req.query, userFilterableFields);
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
     const result = await userService.getAllUserFromDB(filters, options);
@@ -60,7 +60,7 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
   });
 
 
-const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
+const changeProfileStatus = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await userService.changeProfileStatus(id, req.body);
     
@@ -72,7 +72,7 @@ const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
     });
   });
 
-const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+const getMyProfile = catchAsync(async (req, res) => {
     const user = req.user
     const result = await userService.getMyProfileFromDB(user);
     
@@ -83,6 +83,19 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
       data: result,
     });
   });
+
+const updateMyProfile = catchAsync(async (req, res) => {
+
+    const result = await userService.updateMyProfileIntoDB(req.user, req);
+    
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "My profile updated ",
+      data: result,
+    });
+  });
+
 
 
 
@@ -95,5 +108,6 @@ export const userController = {
     createPatient,
     getAllUser,
     changeProfileStatus,
-    getMyProfile
+    getMyProfile,
+    updateMyProfile
 }

@@ -233,6 +233,58 @@ const getMyProfileFromDB = async(user:any)=>{
     return { ...userInfo, ...profileInfo };
 }
 
+const updateMyProfileIntoDB =async(user:any, req:Request)=>{
+    const userInfo = await prisma.user.findUniqueOrThrow({
+        where:{
+            email:user.email,
+            status:UserStatus.ACTIVE
+        }
+    })
+
+    const file = req.file as IFile
+    if(file){
+        const uploadToCloudinary = await fileUploader.uploadToCloudinary(file)
+        req.body.profilePhoto = uploadToCloudinary?.secure_url
+    }
+
+
+    let profileInfo;
+    if(userInfo.role === UserRole.SUPER_ADMIN){
+        profileInfo = await prisma.admin.update({
+            where:{
+                email:userInfo.email
+            },
+            data: req.body
+        })
+    }
+    else if(userInfo.role === UserRole.ADMIN){
+        profileInfo = await prisma.admin.update({
+            where:{
+                email: userInfo.email
+            },
+            data: req.body
+        })
+    }
+    else if(userInfo.role === UserRole.DOCTOR){
+        profileInfo = await prisma.doctor.update({
+            where:{
+                email:userInfo.email
+            },
+            data: req.body
+        })
+    }
+    else if(userInfo.role === UserRole.PATIENT){
+        profileInfo = await prisma.patient.update({
+            where:{
+                email:userInfo.email
+            },
+            data: req.body
+        })
+    }
+
+    return{ ...profileInfo}
+}
+
 
 
 export const userService = {
@@ -241,5 +293,6 @@ export const userService = {
     createPatientIntoDB,
     getAllUserFromDB,
     changeProfileStatus,
-    getMyProfileFromDB
+    getMyProfileFromDB,
+    updateMyProfileIntoDB
 };
