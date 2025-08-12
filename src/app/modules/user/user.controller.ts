@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../../helpars/catchAsync";
 import pick from "../../../shared/pick";
 import { userFilterableFields } from "./user.constant";
+import { JwtPayload } from "jsonwebtoken";
 
 const createAdmin = catchAsync(async (req, res) => {
         const result = await userService.createAdminIntoDB(req);
@@ -74,7 +75,7 @@ const changeProfileStatus = catchAsync(async (req, res) => {
 
 const getMyProfile = catchAsync(async (req, res) => {
     const user = req.user
-    const result = await userService.getMyProfileFromDB(user);
+    const result = await userService.getMyProfileFromDB(user as JwtPayload);
     
     sendResponse(res, {
       statusCode: StatusCodes.OK,
@@ -86,7 +87,7 @@ const getMyProfile = catchAsync(async (req, res) => {
 
 const updateMyProfile = catchAsync(async (req, res) => {
 
-    const result = await userService.updateMyProfileIntoDB(req.user, req);
+    const result = await userService.updateMyProfileIntoDB(req.user as JwtPayload, req);
     
     sendResponse(res, {
       statusCode: StatusCodes.OK,
