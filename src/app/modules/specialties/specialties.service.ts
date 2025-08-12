@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { fileUploader } from "../../../helpars/fileUploader";
 import prisma from "../../../shared/prisma";
-import { IFile } from "../../interface/file";
+import { Specialties } from "@prisma/client";
 
 
 const createSpecialtiesIntoDB = async(req:Request)=>{
@@ -22,9 +22,18 @@ const getAllFromDB = async (): Promise<Specialties[]> => {
     return await prisma.specialties.findMany();
 }
 
+const deleteFromDB = async (id: string): Promise<Specialties> => {
+    const result = await prisma.specialties.delete({
+        where: {
+            id,
+        },
+    });
+    return result;
+};
 
 
 export const SpecialtiesService={
     createSpecialtiesIntoDB,
-    getAllFromDB
+    getAllFromDB,
+    deleteFromDB
 }
