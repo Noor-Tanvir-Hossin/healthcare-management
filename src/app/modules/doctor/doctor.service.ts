@@ -1,3 +1,4 @@
+import { Doctor, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IDoctorUpdate } from "./doctor.interface";
 
@@ -62,7 +63,30 @@ const updateDoctorIntoDB = async(id:string, payload: IDoctorUpdate)=>{
     
 }
 
+const softDeleteFromDB = async (id: string): Promise<Doctor> => {
+    return await prisma.$transaction(async transactionClient => {
+        const deleteDoctor = await transactionClient.doctor.update({
+            where: { id },
+            data: {
+                isDeleted: true,
+            },
+        });
+
+        await transactionClient.user.update({
+            where: {
+                email: deleteDoctor.email,
+            },
+            data: {
+                status: UserStatus.DELETED,
+            },
+        });
+
+        return deleteDoctor;
+    });
+};
+
 
 export const DoctorService ={
-    updateDoctorIntoDB
+    updateDoctorIntoDB,
+    softDeleteFromDB
 }
