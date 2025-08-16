@@ -3,6 +3,19 @@ import catchAsync from "../../../helpars/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { DoctorService } from "./doctor.service";
 
+const getById = catchAsync(async (req, res) => {
+
+    const {id} = req.params
+
+    const result = await DoctorService.getByIdFromDB(id)
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Doctor retrieve successfully!",
+        data: result
+    })
+});
 const updateDoctor = catchAsync(async (req, res) => {
 
     const {id} = req.params
@@ -47,6 +60,7 @@ const deleteDoctor = catchAsync(async (req, res) => {
 
 
 export const DoctorController = {
+    getById,
     updateDoctor,
     softDelete,
     deleteDoctor    

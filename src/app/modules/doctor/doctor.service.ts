@@ -3,6 +3,25 @@ import prisma from "../../../shared/prisma";
 import { IDoctorUpdate } from "./doctor.interface";
 
 
+
+const getByIdFromDB = async (id: string): Promise<Doctor | null> => {
+    const result = await prisma.doctor.findUnique({
+        where: {
+            id,
+            isDeleted: false,
+        },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialities: true
+                }
+            }
+        }
+    });
+    return result;
+};
+
+
 const updateDoctorIntoDB = async(id:string, payload: IDoctorUpdate)=>{
     const {specialties, ...doctorData}= payload
     console.log("spc", specialties);
@@ -105,6 +124,7 @@ const deleteDoctorFromDB = async (id: string): Promise<Doctor> => {
 
 
 export const DoctorService ={
+    getByIdFromDB,
     updateDoctorIntoDB,
     softDeleteFromDB,
     deleteDoctorFromDB
