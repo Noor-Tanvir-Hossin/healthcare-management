@@ -8,7 +8,7 @@ import { DoctorValidation } from "./doctor.validation";
 
 const router = Router();
 
-
+router.get('/', DoctorController.getAllFromDB);
 router.get('/:id', DoctorController.getById);
 
 router.patch(
