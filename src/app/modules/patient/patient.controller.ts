@@ -18,10 +18,22 @@ const getAllPatient =catchAsync(async(req, res)=>{
         data: result.data
     })
 })
+const getPatientById=catchAsync(async(req, res)=>{
+    
+    const {id} = req.params
+    const result = await PatientService.getPatientByIdFromDB(id);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Patient retrieval successfully",
+        data: result
+    })
+})
 
 
 
 
 export const PatientController = {
-    getAllPatient
+    getAllPatient,
+    getPatientById
   };
