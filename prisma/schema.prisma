@@ -80,8 +80,8 @@ model Patient {
   updatedAt     DateTime @updatedAt
 
   user User @relation(references: [email], fields: [email])
-  PatientHealthData PatientHealthData?
-  MedicalReport      MedicalReport[]
+  patientHealthData PatientHealthData?
+  medicalReport      MedicalReport[]
 
   @@map("patients")
 }
@@ -162,10 +162,10 @@ enum Gender {
   FEMALE
 }
 enum BloodGroup {
-  A_POSITIVIE
-  B_POSITIVIE
-  O_POSITIVIE
-  AB_POSITIVIE
+  A_POSITIVE
+  B_POSITIVE
+  O_POSITIVE
+  AB_POSITIVE
   A_NEGATIVE
   B_NEGATIVE
   O_NEGATIVE

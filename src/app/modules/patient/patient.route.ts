@@ -8,5 +8,9 @@ router.get(
     '/:id',
     PatientController.getPatientById
 );
+router.patch(
+    '/:id',
+    PatientController.updatePatient
+);
 
 export const PatientRoutes = router;

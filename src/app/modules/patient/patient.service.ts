@@ -2,7 +2,7 @@ import { Patient, Prisma } from "@prisma/client";
 import { paginationHelpar } from "../../../helpars/paginationHelpar";
 import { IPaginationOptions } from "../../interface/pagination";
 import { patientSearchableFields } from "./patient.constant";
-import { IPatientFilterRequest } from "./patient.interface";
+import { IPatientFilterRequest, IPatientUpdate } from "./patient.interface";
 import prisma from "../../../shared/prisma";
 
 const getAllPatientFromDB = async (
@@ -54,8 +54,8 @@ const getAllPatientFromDB = async (
             createdAt: 'desc',
           },
       include: {
-        MedicalReport: true,
-        PatientHealthData: true,
+        medicalReport: true,
+        patientHealthData: true,
       }
     });
     const total = await prisma.patient.count({
@@ -79,12 +79,63 @@ const getAllPatientFromDB = async (
         isDeleted: false,
       },
       include: {
-        MedicalReport: true,
-        PatientHealthData: true,
+        medicalReport: true,
+        patientHealthData: true,
       },
     });
     return result;
   };
+
+const updatePatientIntoDB = async(id:string, payload: Partial<IPatientUpdate> ) : Promise<Patient|null> =>{
+  const {patientHealthData, medicalReport, ...patientData} = payload
+
+  const patientInfo = await prisma.patient.findUniqueOrThrow({
+    where:{
+      id,
+      isDeleted:false
+    }
+  })
+
+  await prisma.$transaction(async(transactionClient) =>{
+    await transactionClient.patient.update({
+      where:{
+        id
+      },
+      data:patientData,
+      include:{
+        patientHealthData: true,
+        medicalReport: true
+      }     
+    })
+
+    if(patientHealthData){
+      await transactionClient.patientHealthData.upsert({
+        where:{
+          patientId: patientInfo.id
+        },
+        update: patientHealthData,
+        create: {... patientHealthData, patientId: patientInfo.id}
+      })  
+    }
+    if (medicalReport) {
+      await transactionClient.medicalReport.create({
+        data: { ...medicalReport, patientId: patientInfo.id }
+      })
+    }
+    
+
+  })
+  const responseData = await prisma.patient.findUnique({
+    where:{
+      id: patientInfo.id
+    },
+    include:{
+      medicalReport: true,
+      patientHealthData: true
+    }
+  })
+    return responseData
+}
 
   
 
@@ -93,6 +144,7 @@ const getAllPatientFromDB = async (
 
   export const PatientService = {
     getAllPatientFromDB,
-    getPatientByIdFromDB
+    getPatientByIdFromDB,
+    updatePatientIntoDB
    
   };
