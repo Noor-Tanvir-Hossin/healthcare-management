@@ -24,4 +24,15 @@ export type IPatientFilterRequest = {
     recentDepression?: boolean
     maritalStatus?: MaritalStatus
   }
- 
+  type IMedicalReport = {
+    reportName: string
+    reportLink: string
+  }
+  
+  export type IPatientUpdate = {
+    name: string
+    contactNumber: string
+    address: string;
+    patientHealthData: IPatientHealthData,
+    medicalReport: IMedicalReport
+  }

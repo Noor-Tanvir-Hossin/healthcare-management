@@ -86,6 +86,8 @@ const getAllPatientFromDB = async (
     return result;
   };
 
+  
+
 
 
 
