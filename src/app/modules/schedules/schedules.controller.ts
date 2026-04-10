@@ -26,7 +26,7 @@ const getAllFromDB=catchAsync(async(req , res)=>{
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
-        message: "Schedules created successfully",
+        message: "Schedules retrived successfully",
         data: result
     })
 }) 
