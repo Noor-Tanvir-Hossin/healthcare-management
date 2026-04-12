@@ -20,6 +20,12 @@ router.get(
     DoctorScheduleController.getMySchedule
 )
 
+router.delete(
+    '/:id',
+    auth(UserRole.DOCTOR),
+    DoctorScheduleController.deleteFromDB
+);
+
 
 
 export const SchedulesRoutes = router;
