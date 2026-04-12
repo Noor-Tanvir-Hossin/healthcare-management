@@ -18,7 +18,22 @@ const insertIntoDB=catchAsync(async(req , res)=>{
     })
 }) 
 
+const getMySchedule =catchAsync(async(req, res) =>{
+    const filters = pick(req.query, ['startDate', 'endDate', 'isBooked']);
+
+    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+    const result = await DoctorScheduleService.getMySchedule(filters, options, req.user as IAuthUser);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "My Schedule fetched successfully!",
+        data: result
+    })
+})
+
 
 export const DoctorScheduleController = {
-    insertIntoDB
+    insertIntoDB,
+    getMySchedule
   };
