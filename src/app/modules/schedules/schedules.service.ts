@@ -4,7 +4,7 @@ import { IFilterRequest } from "./schedules.interface";
 import { IPaginationOptions } from "../../interface/pagination";
 import { IAuthUser } from "../../interface/common";
 import { paginationHelpar } from "../../../helpars/paginationHelpar";
-import { Prisma } from "@prisma/client";
+import { Prisma, Schedule } from "@prisma/client";
 
 const convertDateTime = async (date: Date) => {
   const offset = date.getTimezoneOffset() * 60000;
@@ -161,11 +161,30 @@ const getAllFromDB = async (
   };
 };
 
+const getByIdFromDB = async (id: string): Promise<Schedule | null> => {
+  const result = await prisma.schedule.findUnique({
+      where: {
+          id,
+      },
+  });
+  return result;
+};
+
+const deleteFromDB = async (id: string): Promise<Schedule> => {
+  const result = await prisma.schedule.delete({
+      where: {
+          id,
+      },
+  });
+  return result;
+};
 
 
 
 
 export const ScheduleService = {
   insertSchedulesIntoDB,
-  getAllFromDB
+  getAllFromDB,
+  getByIdFromDB,
+  deleteFromDB
 };

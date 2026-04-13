@@ -11,10 +11,22 @@ router.get(
     SchedulesController.getAllFromDB
 );
 
-router.post('/',
-auth(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-, SchedulesController.insertSchedules)
+router.get(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    SchedulesController.getByIdFromDB
+);
 
 
+
+
+
+
+
+router.delete(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    SchedulesController.deleteFromDB
+);
 
 export const SchedulesRoutes = router;
