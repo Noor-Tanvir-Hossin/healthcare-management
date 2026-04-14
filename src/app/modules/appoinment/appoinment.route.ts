@@ -7,6 +7,19 @@ import { AppointmentController } from "./appoinment.controller";
 
 const router = Router();
 
+
+router.get(
+    '/',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    AppointmentController.getAllFromDB
+);
+
+router.get(
+    '/my-appointment',
+    auth(UserRole.PATIENT, UserRole.DOCTOR),
+    AppointmentController.getMyAppointment
+)
+
 router.post(
     '/',
     auth(UserRole.PATIENT),
