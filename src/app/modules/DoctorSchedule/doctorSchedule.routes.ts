@@ -34,4 +34,4 @@ router.get(
 
 
 
-export const SchedulesRoutes = router;
+export const DoctorSchedulesRoutes = router;
